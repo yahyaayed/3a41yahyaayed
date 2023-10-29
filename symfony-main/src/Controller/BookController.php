@@ -26,9 +26,9 @@ class BookController extends AbstractController
     #[Route('/AfficheBook', name: 'app_AfficheBook')]
     public function Affiche(BookRepository $repository)
     {
-        //récupérer les livres publiés
+  
         $publishedBooks = $this->getDoctrine()->getRepository(Book::class)->findBy(['published' => true]);
-        //compter le nombre de livres pubbliés et non publiés
+        
         $numPublishedBooks = count($publishedBooks);
         $numUnPublishedBooks = count($this->getDoctrine()->getRepository(Book::class)->findBy(['published' => false]));
 
@@ -36,7 +36,7 @@ class BookController extends AbstractController
             return $this->render('book/Affiche.html.twig', ['publishedBooks' => $publishedBooks, 'numPublishedBooks' => $numPublishedBooks, 'numUnPublishedBooks' => $numUnPublishedBooks]);
 
         } else {
-            //afficher un message si aucun livre n'a été trouvé$
+           
             return $this->render('book/no_books_found.html.twig');
         }
 
@@ -50,12 +50,8 @@ class BookController extends AbstractController
         $form->add('Ajouter', SubmitType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            //initialisation de l'attribut "published" a true
             //  $book->setPublished(true);
-// get the accociated author from the book entity
             $author = $book->getAuthor();
-            //incrementation de l'attribut "nb_books" de l'entire Author
-
             if ($author instanceof Author) {
                 $author->setNbBooks($author->getNbBooks() + 1);
             }
@@ -79,7 +75,7 @@ class BookController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->flush(); // Correction : Utilisez la méthode flush() sur l'EntityManager pour enregistrer les modifications en base de données.
+            $em->flush();
             return $this->redirectToRoute("app_AfficheBook");
         }
 
